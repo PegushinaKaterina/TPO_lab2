@@ -20,31 +20,31 @@ class RegisterPage(private val driver: WebDriver, waits: Map<WebDriver, WebDrive
     @FindBy(xpath = "//*[text()=\"Continue\"]/ancestor::button")
     lateinit var continueButton: WebElement
 
-    fun inputFirstName(firstName: String) {
-        firstNameInput.sendKeys(firstName)
-    }
-
-    fun inputLastName(lastName: String) {
-        lastNameInput.sendKeys(lastName)
-    }
-
-    fun inputEmail(email: String) {
-        emailInput.sendKeys(email)
-    }
-
-    fun inputPassword(password: String) {
-        passwordInput.sendKeys(password)
-    }
-
-    fun clickContinueButton() {
-        continueButton.click()
-    }
-
     fun register(firstName: String, lastName: String, email: String, password: String) {
         inputFirstName(firstName)
         inputLastName(lastName)
         inputEmail(email)
         inputPassword(password)
         clickContinueButton()
+    }
+
+    private fun inputFirstName(firstName: String) {
+        firstNameInput.sendKeys(firstName)
+    }
+
+    private fun inputLastName(lastName: String) {
+        lastNameInput.sendKeys(lastName)
+    }
+
+    private fun inputEmail(email: String) {
+        emailInput.sendKeys(email)
+    }
+
+    private fun inputPassword(password: String) {
+        passwordInput.sendKeys(password)
+    }
+
+    private fun clickContinueButton() {
+        continueButton.click()
     }
 }

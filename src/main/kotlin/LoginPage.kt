@@ -17,20 +17,6 @@ class LoginPage(private val driver: WebDriver, private val waits: Map<WebDriver,
     @FindBy(xpath = "//*[text()=\"Log in\"]/ancestor::button")
     lateinit var loginButton: WebElement
 
-    fun inputEmail(email: String) {
-        emailInput.sendKeys(email)
-        waits[driver]?.until(ExpectedConditions.attributeToBe(emailInput, "value", email))
-    }
-
-    fun inputPassword(password: String) {
-        passwordInput.sendKeys(password)
-        waits[driver]?.until(ExpectedConditions.attributeToBe(passwordInput, "value", password))
-    }
-
-    fun clickLoginButton() {
-        loginButton.click()
-    }
-
     fun login(email: String, password: String) {
         val loginUrl = driver.currentUrl
         inputEmail(email)
@@ -46,5 +32,19 @@ class LoginPage(private val driver: WebDriver, private val waits: Map<WebDriver,
                 throw InvalidLoginOrPasswordException()
             }
         }
+    }
+
+    private fun inputEmail(email: String) {
+        emailInput.sendKeys(email)
+        waits[driver]?.until(ExpectedConditions.attributeToBe(emailInput, "value", email))
+    }
+
+    private fun inputPassword(password: String) {
+        passwordInput.sendKeys(password)
+        waits[driver]?.until(ExpectedConditions.attributeToBe(passwordInput, "value", password))
+    }
+
+    private fun clickLoginButton() {
+        loginButton.click()
     }
 }
