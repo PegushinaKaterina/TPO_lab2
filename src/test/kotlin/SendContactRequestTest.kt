@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test
+import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import kotlin.test.assertEquals
@@ -42,12 +43,18 @@ class SendContactRequestTest : BaseTest() {
         pagesByDriver.forEach { (driver, pages) ->
             val wait = waits[driver]
             pages.loginPage.login(email, password)
-            wait?.until(ExpectedConditions.urlContains(recommendationsPageUrl))
+
+            wait?.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//div[@data-qa=\"network-filtered-recommendations-container\"]/div/div[1]"))
+            )
 
             val addedName = pages.recommendationsPage.addFirstContact()
 
             driver.get(sentRequestsUrl)
-            wait?.until(ExpectedConditions.urlContains(sentRequestsUrl))
+
+            wait?.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[@data-qa=\"requests-sent-list\"]"))
+            )
 
             val requestName = pages.sentRequestsPage.lastRequestName.text
             assertEquals(addedName, requestName)
