@@ -1,3 +1,5 @@
+import exceptions.InvalidLoginOrPasswordException
+import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
@@ -34,5 +36,11 @@ class LoginPage(private val driver: WebDriver, private val waits: Map<WebDriver,
         inputPassword(password)
         wait?.until(ExpectedConditions.attributeContains(passwordInput, "value", password))
         clickLoginButton()
+
+        val invalidText =
+            driver.findElements(By.xpath("//span[text()= \"Please check your login details and try again.\"]"))
+        if (invalidText.isNotEmpty()) {
+            throw InvalidLoginOrPasswordException()
+        }
     }
 }

@@ -1,6 +1,5 @@
 package utils
 
-import exceptions.InvalidChromeException
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -15,7 +14,7 @@ class Properties private constructor() {
                 context.setChromeDriver(props.getProperty(WEBDRIVER_CHROME_DRIVER))
             }
         } else {
-            throw InvalidChromeException()
+//            throw InvalidChromeException()
         }
         if (props.getProperty(WEBDRIVER_FIREFOX_DRIVER) != null) {
             if (props.getProperty(WEBDRIVER_FIREFOX_DRIVER) == FIREFOX_FIREFOX) {

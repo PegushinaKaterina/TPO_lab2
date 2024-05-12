@@ -1,4 +1,6 @@
+import exceptions.InvalidLoginOrPasswordException
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import kotlin.test.assertEquals
@@ -13,6 +15,7 @@ class LoginTest : BaseTest() {
     private lateinit var email: String
     private lateinit var password: String
     private lateinit var jobsFindUrl: String
+    private lateinit var invalidEmail: String
 
     override fun getUrl(): String {
         return loginPageUrl
@@ -29,6 +32,8 @@ class LoginTest : BaseTest() {
         email = dataProps.getProperty("email")
         password = dataProps.getProperty("password")
         jobsFindUrl = dataProps.getProperty("jobs.find.url")
+
+        invalidEmail = dataProps.getProperty("email.invalid")
     }
 
     @Test
@@ -41,6 +46,13 @@ class LoginTest : BaseTest() {
 
             val currentUrl = driver.currentUrl
             assertEquals(jobsFindUrl, currentUrl)
+        }
+    }
+
+    @Test
+    fun loginWithInvalidEmail() {
+        loginPageByDriver.forEach { (_, loginPage) ->
+            assertThrows<InvalidLoginOrPasswordException> { loginPage.login(invalidEmail, password) }
         }
     }
 }

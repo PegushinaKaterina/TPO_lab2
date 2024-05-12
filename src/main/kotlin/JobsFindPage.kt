@@ -34,7 +34,7 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
 
     fun jobSelect(): Boolean {
         val wait = waits[driver]
-        val resultList = driver.findElements(By.xpath("//main/ul"))
+        val resultList = driver.findElements(By.xpath("//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/main/ul"))
 
         return if (resultList.isNotEmpty()) {
             wait?.until(ExpectedConditions.elementToBeClickable(firstJob))
@@ -57,8 +57,10 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
 
     private fun inputJobTitle(jobTitle: String) {
         jobTitleInput.clear()
+        waits[driver]?.until(ExpectedConditions.attributeToBe(jobTitleInput, "value", ""))
+
         jobTitleInput.sendKeys(jobTitle)
-        waits[driver]?.until(ExpectedConditions.attributeContains(jobTitleInput, "value", jobTitle))
+        waits[driver]?.until(ExpectedConditions.attributeToBe(jobTitleInput, "value", jobTitle))
     }
 
     private fun inputLocation(location: String?) {
