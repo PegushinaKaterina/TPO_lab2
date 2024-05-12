@@ -26,7 +26,7 @@ class LoginTest : BaseTest() {
         loginPageUrl = dataProps.getProperty("login.page.url")
         firstName = dataProps.getProperty("first.name")
         lastName = dataProps.getProperty("last.name")
-        email= dataProps.getProperty("email")
+        email = dataProps.getProperty("email")
         password = dataProps.getProperty("password")
         jobsFindUrl = dataProps.getProperty("jobs.find.url")
     }

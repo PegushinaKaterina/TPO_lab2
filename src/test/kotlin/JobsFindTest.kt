@@ -23,7 +23,6 @@ class JobsFindTest : BaseTest() {
     }
 
     override fun initializeData() {
-
         jobsFindUrl = dataProps.getProperty("jobs.find.url")
         firstName = dataProps.getProperty("first.name")
         lastName = dataProps.getProperty("last.name")
@@ -33,7 +32,7 @@ class JobsFindTest : BaseTest() {
     }
 
     @Test
-    fun jobsFind2() {
+    fun jobsFind() {
         pagesByDriver.forEach { (driver, pages) ->
             val wait = waits[driver]
             pages.loginPage.login(email, password)
@@ -52,8 +51,14 @@ class JobsFindTest : BaseTest() {
         }
     }
 
-    fun jobsFind(driver: WebDriver, wait: WebDriverWait?, jobTitle: String, location: String?, radius: Radius?) {
-        val pages = pagesByDriver.get(driver)!!
+    private fun jobsFind(
+        driver: WebDriver,
+        wait: WebDriverWait?,
+        jobTitle: String,
+        location: String?,
+        radius: Radius?
+    ) {
+        val pages = pagesByDriver[driver]!!
         pages.jobsFindPage.jobsFind(jobTitle, location, radius)
 
         wait?.until(ExpectedConditions.urlContains(jobsSearchUrl))
@@ -61,8 +66,8 @@ class JobsFindTest : BaseTest() {
         assert(currentUrl.contains(jobsSearchUrl))
     }
 
-    fun jobSelect(driver: WebDriver, wait: WebDriverWait?, jobTitle: String) {
-        val pages = pagesByDriver.get(driver)!!
+    private fun jobSelect(driver: WebDriver, wait: WebDriverWait?, jobTitle: String) {
+        val pages = pagesByDriver[driver]!!
         if (pages.jobsFindPage.jobSelect()) {
             wait?.until(ExpectedConditions.titleContains(jobTitle))
             val currentTitle = driver.title

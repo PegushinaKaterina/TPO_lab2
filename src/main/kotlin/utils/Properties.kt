@@ -1,11 +1,10 @@
 package utils
 
 import exceptions.InvalidChromeException
-import exceptions.InvalidFirefoxException
 import java.io.FileInputStream
 import java.util.Properties
 
-class Properties private constructor(){
+class Properties private constructor() {
 
     fun reading(context: Context) {
         val props = Properties()

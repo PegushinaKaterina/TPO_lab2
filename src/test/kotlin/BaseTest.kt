@@ -11,12 +11,12 @@ import utils.Properties
 import java.io.FileInputStream
 import java.lang.Thread.sleep
 import java.time.Duration
-import kotlin.concurrent.thread
+import java.util.Properties as JavaProperties
 
 abstract class BaseTest {
     lateinit var context: Context
     lateinit var drivers: List<WebDriver>
-    lateinit var dataProps: java.util.Properties
+    lateinit var dataProps: JavaProperties
     lateinit var waits: Map<WebDriver, WebDriverWait>
 
     @BeforeEach
@@ -24,16 +24,16 @@ abstract class BaseTest {
         sleep(10000)
         context = Context()
         drivers = emptyList()
-        dataProps = java.util.Properties()
+        dataProps = JavaProperties()
         dataProps.load(FileInputStream("src/test/resources/data.properties"))
         initializeData()
 
         Properties.getInstance().reading(context)
-        context.getChromeDriver()?.let { chromeDriver ->
+        context.getChromeDriver()?.let {
             drivers = drivers + ChromeDriver()
         }
 
-        context.getFirefoxDriver()?.let { firefoxDriver ->
+        context.getFirefoxDriver()?.let {
             drivers = drivers + FirefoxDriver()
         }
 
@@ -61,7 +61,7 @@ abstract class BaseTest {
     abstract fun initializeData()
 
     @AfterEach
-    fun teardown() {
+    fun tearDown() {
         drivers.forEach { it.quit() }
     }
 }

@@ -4,8 +4,6 @@ import kotlin.test.assertEquals
 
 class RegisterTest : BaseTest() {
 
-    private lateinit var loginPageByDriver: Map<WebDriver, LoginPage>
-
     private lateinit var registerPageByDriver: Map<WebDriver, RegisterPage>
 
     private lateinit var registerPageUrl: String
@@ -27,7 +25,7 @@ class RegisterTest : BaseTest() {
         registerPageUrl = dataProps.getProperty("register.page.url")
         firstName = dataProps.getProperty("first.name")
         lastName = dataProps.getProperty("last.name")
-        email= dataProps.getProperty("email")
+        email = dataProps.getProperty("email")
         password = dataProps.getProperty("password")
         notRobotUrl = dataProps.getProperty("not.robot.url")
     }
