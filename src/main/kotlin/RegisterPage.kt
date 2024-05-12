@@ -17,7 +17,7 @@ class RegisterPage(private val driver: WebDriver, waits: Map<WebDriver, WebDrive
     @FindBy(xpath = "//*[@id=\"password\"]")
     lateinit var passwordInput: WebElement
 
-    @FindBy(xpath = "//*[@id=\"javascript-content\"]/div[2]/div/div/div[1]/div/div/form/button/div")
+    @FindBy(xpath = "//*[text()=\"Continue\"]/ancestor::button")
     lateinit var continueButton: WebElement
 
     fun inputFirstName(firstName: String) {

@@ -1,30 +1,30 @@
-enum class Radius(val radiusOptionButtonXPath: String, val text: String) {
+enum class Radius(val buttonXPath: String, val text: String) {
     NO_RADIUS(
-        "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/div/button[1]/div",
+        "//*[text()=\"No radius\"]/ancestor::button[@data-xds=\"SingleSelect\"]",
         "No radius"
     ),
     KM_10(
-        "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/div/button[2]/div",
+        "//*[text()=\"10 km\"]/ancestor::button[@data-xds=\"SingleSelect\"]",
         "10 km"
     ),
     KM_20(
-        "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/div/button[3]/div",
+        "//*[text()=\"20 km\"]/ancestor::button[@data-xds=\"SingleSelect\"]",
         "20 km"
     ),
     KM_50(
-        "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/div/button[4]/div",
+        "//*[text()=\"50 km\"]/ancestor::button[@data-xds=\"SingleSelect\"]",
         "50 km"
     ),
     KM_70(
-        "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/div/button[5]/div",
+        "//*[text()=\"70 km\"]/ancestor::button[@data-xds=\"SingleSelect\"]v",
         "70 km"
     ),
     KM_100(
-        "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/div/button[6]/div",
+        "//*[text()=\"100 km\"]/ancestor::button[@data-xds=\"SingleSelect\"]",
         "100 km"
     ),
     KM_200(
-        "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/div/button[7]/div",
+        "//*[text()=\"200 km\"]/ancestor::button[@data-xds=\"SingleSelect\"]",
         "200 km"
     ),
 }

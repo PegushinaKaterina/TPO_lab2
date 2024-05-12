@@ -14,70 +14,27 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
     @FindBy(xpath = "//*[@id=\"location-input\"]")
     lateinit var locationInput: WebElement
 
-    @FindBy(xpath = "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[1]/div/div/button")
+    @FindBy(xpath = "//*[@data-xds=\"IconCross\"]/ancestor::button[@type=\"reset\"]")
     lateinit var clearLocationButton: WebElement
 
-    @FindBy(xpath = "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/button/div")
+    @FindBy(xpath = "//button[@data-qa=\"search-radius-dropdown\"]")
     lateinit var radiusSelections: WebElement
 
-    @FindBy(xpath = "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/div[2]/div[2]/button/div/span[2]")
+    @FindBy(xpath = "//button[@data-qa=\"search-radius-dropdown\"]/div/span[last()]")
     lateinit var radiusSelectionsText: WebElement
 
-    @FindBy(xpath = "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/section/div/div/form/button[2]/div")
+    @FindBy(xpath = "//button[@data-qa=\"search-button\"][@type=\"submit\"]")
     lateinit var findJobButton: WebElement
 
-    @FindBy(xpath = "//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/main/ul/li[1]/article/a")
+    @FindBy(xpath = "//main/ul/li[1]/article/a")
     lateinit var firstJob: WebElement
 
-    @FindBy(xpath = "//*[@id=\"content\"]/div/div[3]/div/div[1]/div/div[4]/div/div/a")
+    @FindBy(xpath = "//*[text()=\"Visit employer website\"]/ancestor::a")
     lateinit var visitButton: WebElement
-
-    fun inputJobTitle(jobTitle: String) {
-        jobTitleInput.clear()
-        jobTitleInput.sendKeys(jobTitle)
-        waits[driver]?.until(ExpectedConditions.attributeContains(jobTitleInput, "value", jobTitle))
-    }
-
-    fun inputLocation(location: String?) {
-        clearLocationButton.click()
-        location?.let {
-            locationInput.sendKeys(location)
-            waits[driver]?.until(ExpectedConditions.attributeContains(locationInput, "value", location))
-        }
-    }
-
-    fun selectRadius(radius: Radius?) {
-        radius?.let {
-            if (radiusSelections.isEnabled && radiusSelections.isDisplayed) {
-                val wait = waits[driver]
-                radiusSelections.click()
-
-                wait?.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(radius.radiusOptionButtonXPath)))
-
-                val radiusButton =
-                    driver.findElement(By.xpath(radius.radiusOptionButtonXPath))
-                radiusButton.click()
-
-                wait?.until(ExpectedConditions.textToBePresentInElement(radiusSelectionsText, radius.text))
-            }
-        }
-    }
-
-    fun clickFindJobButton() {
-        findJobButton.click()
-    }
-
-    fun clickFirstJobButton() {
-        firstJob.click()
-    }
-
-    fun clickVisitButton() {
-        visitButton.click()
-    }
 
     fun jobSelect(): Boolean {
         val wait = waits[driver]
-        val resultList = driver.findElements(By.xpath("//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/main/ul"))
+        val resultList = driver.findElements(By.xpath("//main/ul"))
 
         return if (resultList.isNotEmpty()) {
             wait?.until(ExpectedConditions.elementToBeClickable(firstJob))
@@ -96,5 +53,48 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
         selectRadius(radius)
         inputLocation(location)
         clickFindJobButton()
+    }
+
+    private fun inputJobTitle(jobTitle: String) {
+        jobTitleInput.clear()
+        jobTitleInput.sendKeys(jobTitle)
+        waits[driver]?.until(ExpectedConditions.attributeContains(jobTitleInput, "value", jobTitle))
+    }
+
+    private fun inputLocation(location: String?) {
+        clearLocationButton.click()
+        location?.let {
+            locationInput.sendKeys(location)
+            waits[driver]?.until(ExpectedConditions.attributeContains(locationInput, "value", location))
+        }
+    }
+
+    private fun selectRadius(radius: Radius?) {
+        radius?.let {
+            if (radiusSelections.isEnabled && radiusSelections.isDisplayed) {
+                val wait = waits[driver]
+                radiusSelections.click()
+
+                wait?.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(radius.buttonXPath)))
+
+                val radiusButton =
+                    driver.findElement(By.xpath(radius.buttonXPath))
+                radiusButton.click()
+
+                wait?.until(ExpectedConditions.textToBePresentInElement(radiusSelectionsText, radius.text))
+            }
+        }
+    }
+
+    private fun clickFindJobButton() {
+        findJobButton.click()
+    }
+
+    private fun clickFirstJobButton() {
+        firstJob.click()
+    }
+
+    private fun clickVisitButton() {
+        visitButton.click()
     }
 }

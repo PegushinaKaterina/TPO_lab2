@@ -12,7 +12,7 @@ class LoginPage(private val driver: WebDriver, private val waits: Map<WebDriver,
     @FindBy(xpath = "//*[@id=\"password\"]")
     lateinit var passwordInput: WebElement
 
-    @FindBy(xpath = "//*[@id=\"javascript-content\"]/div[2]/form/button/div")
+    @FindBy(xpath = "//*[text()=\"Log in\"]/ancestor::button")
     lateinit var loginButton: WebElement
 
     fun inputEmail(email: String) {
