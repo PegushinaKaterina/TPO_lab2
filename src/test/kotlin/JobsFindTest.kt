@@ -35,9 +35,9 @@ class JobsFindTest : BaseTest() {
     @Test
     fun jobsFind2() {
         pagesByDriver.forEach { (driver, pages) ->
-            val wait = waits[driver]!!
+            val wait = waits[driver]
             pages.loginPage.login(email, password)
-            wait.until(ExpectedConditions.urlContains(jobsFindUrl))
+            wait?.until(ExpectedConditions.urlContains(jobsFindUrl))
 
             val paramsList = listOf(
                 Params("Software Developer", null, Radius.NO_RADIUS),
@@ -52,19 +52,19 @@ class JobsFindTest : BaseTest() {
         }
     }
 
-    fun jobsFind(driver: WebDriver, wait: WebDriverWait, jobTitle: String, location: String?, radius: Radius?) {
+    fun jobsFind(driver: WebDriver, wait: WebDriverWait?, jobTitle: String, location: String?, radius: Radius?) {
         val pages = pagesByDriver.get(driver)!!
         pages.jobsFindPage.jobsFind(jobTitle, location, radius)
 
-        wait.until(ExpectedConditions.urlContains(jobsSearchUrl))
+        wait?.until(ExpectedConditions.urlContains(jobsSearchUrl))
         val currentUrl = driver.currentUrl
         assert(currentUrl.contains(jobsSearchUrl))
     }
 
-    fun jobSelect(driver: WebDriver, wait: WebDriverWait, jobTitle: String) {
+    fun jobSelect(driver: WebDriver, wait: WebDriverWait?, jobTitle: String) {
         val pages = pagesByDriver.get(driver)!!
         if (pages.jobsFindPage.jobSelect()) {
-            wait.until(ExpectedConditions.titleContains(jobTitle))
+            wait?.until(ExpectedConditions.titleContains(jobTitle))
             val currentTitle = driver.title
             assert(currentTitle.contains(jobTitle))
         }

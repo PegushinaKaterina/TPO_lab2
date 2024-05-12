@@ -35,30 +35,30 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
     fun inputJobTitle(jobTitle: String) {
         jobTitleInput.clear()
         jobTitleInput.sendKeys(jobTitle)
-        waits[driver]!!.until(ExpectedConditions.attributeContains(jobTitleInput, "value", jobTitle))
+        waits[driver]?.until(ExpectedConditions.attributeContains(jobTitleInput, "value", jobTitle))
     }
 
     fun inputLocation(location: String?) {
         clearLocationButton.click()
         location?.let {
             locationInput.sendKeys(location)
-            waits[driver]!!.until(ExpectedConditions.attributeContains(locationInput, "value", location))
+            waits[driver]?.until(ExpectedConditions.attributeContains(locationInput, "value", location))
         }
     }
 
     fun selectRadius(radius: Radius?) {
         radius?.let {
             if (radiusSelections.isEnabled && radiusSelections.isDisplayed) {
-                val wait = waits[driver]!!
+                val wait = waits[driver]
                 radiusSelections.click()
 
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(radius.radiusOptionButtonXPath)))
+                wait?.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(radius.radiusOptionButtonXPath)))
 
                 val radiusButton =
                     driver.findElement(By.xpath(radius.radiusOptionButtonXPath))
                 radiusButton.click()
 
-                wait.until(ExpectedConditions.textToBePresentInElement(radiusSelectionsText, radius.text))
+                wait?.until(ExpectedConditions.textToBePresentInElement(radiusSelectionsText, radius.text))
             }
         }
     }
@@ -76,14 +76,14 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
     }
 
     fun jobSelect(): Boolean {
-        val wait = waits[driver]!!
+        val wait = waits[driver]
         val resultList = driver.findElements(By.xpath("//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/main/ul"))
 
         return if (resultList.isNotEmpty()) {
-            waits[driver]!!.until(ExpectedConditions.elementToBeClickable(firstJob))
+            wait?.until(ExpectedConditions.elementToBeClickable(firstJob))
             clickFirstJobButton()
 
-            wait.until(ExpectedConditions.elementToBeClickable(visitButton))
+            wait?.until(ExpectedConditions.elementToBeClickable(visitButton))
             clickVisitButton()
             true
         } else {

@@ -1,8 +1,6 @@
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
-import org.openqa.selenium.support.ui.WebDriverWait
-import java.time.Duration
 import kotlin.test.assertEquals
 
 class LoginTest : BaseTest() {
@@ -38,8 +36,8 @@ class LoginTest : BaseTest() {
         loginPageByDriver.forEach { (driver, loginPage) ->
             loginPage.login(email, password)
 
-            val wait = WebDriverWait(driver, Duration.ofSeconds(20))
-            wait.until(ExpectedConditions.urlContains(jobsFindUrl))
+            val wait = waits[driver]
+            wait?.until(ExpectedConditions.urlContains(jobsFindUrl))
 
             val currentUrl = driver.currentUrl
             assertEquals(jobsFindUrl, currentUrl)
