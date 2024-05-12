@@ -19,10 +19,12 @@ class LoginPage(private val driver: WebDriver, private val waits: Map<WebDriver,
 
     fun inputEmail(email: String) {
         emailInput.sendKeys(email)
+        waits[driver]?.until(ExpectedConditions.attributeToBe(emailInput, "value", email))
     }
 
     fun inputPassword(password: String) {
         passwordInput.sendKeys(password)
+        waits[driver]?.until(ExpectedConditions.attributeToBe(passwordInput, "value", password))
     }
 
     fun clickLoginButton() {
@@ -30,17 +32,19 @@ class LoginPage(private val driver: WebDriver, private val waits: Map<WebDriver,
     }
 
     fun login(email: String, password: String) {
-        val wait = waits[driver]
+        val loginUrl = driver.currentUrl
         inputEmail(email)
-        wait?.until(ExpectedConditions.attributeContains(emailInput, "value", email))
         inputPassword(password)
-        wait?.until(ExpectedConditions.attributeContains(passwordInput, "value", password))
         clickLoginButton()
 
-        val invalidText =
-            driver.findElements(By.xpath("//span[text()= \"Please check your login details and try again.\"]"))
-        if (invalidText.isNotEmpty()) {
-            throw InvalidLoginOrPasswordException()
+        try {
+            waits[driver]?.until(ExpectedConditions.not(ExpectedConditions.urlContains(loginUrl)))
+        } catch (e: Exception) {
+            val invalidTextElement =
+                driver.findElements(By.xpath("//span[text()= \"Please check your login details and try again.\"]"))
+            if (invalidTextElement.isNotEmpty()) {
+                throw InvalidLoginOrPasswordException()
+            }
         }
     }
 }

@@ -55,4 +55,4 @@ class LoginTest : BaseTest() {
             assertThrows<InvalidLoginOrPasswordException> { loginPage.login(invalidEmail, password) }
         }
     }
-}
+ }

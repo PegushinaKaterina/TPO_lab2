@@ -49,9 +49,9 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
     }
 
     fun jobsFind(jobTitle: String, location: String?, radius: Radius?) {
-        inputJobTitle(jobTitle)
         selectRadius(radius)
         inputLocation(location)
+        inputJobTitle(jobTitle)
         clickFindJobButton()
     }
 
@@ -65,6 +65,8 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
 
     private fun inputLocation(location: String?) {
         clearLocationButton.click()
+        waits[driver]?.until(ExpectedConditions.attributeToBe(locationInput, "value", ""))
+
         location?.let {
             locationInput.sendKeys(location)
             waits[driver]?.until(ExpectedConditions.attributeContains(locationInput, "value", location))

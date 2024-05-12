@@ -41,7 +41,7 @@ abstract class BaseTest {
 
         val waitMutableMap = mutableMapOf<WebDriver, WebDriverWait>()
         drivers.forEach {
-            it.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
+            //it.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
             waitMutableMap[it] = WebDriverWait(it, Duration.ofSeconds(10))
         }
         waits = waitMutableMap

@@ -32,24 +32,52 @@ class JobsFindTest : BaseTest() {
     }
 
     @Test
-    fun jobsFind() {
+    fun jobsFind1() {
         pagesByDriver.forEach { (driver, pages) ->
             val wait = waits[driver]
             pages.loginPage.login(email, password)
             wait?.until(ExpectedConditions.urlContains(jobsFindUrl))
 
-            val paramsList = listOf(
-                Params("Software Developer", null, Radius.NO_RADIUS),
-                Params("Manager", "St Petersburg", Radius.KM_50)
-            )
+            val params = Params("Software Developer", null, Radius.NO_RADIUS)
 
-            paramsList.forEach {
-                driver.get(jobsFindUrl)
-                jobsFind(driver, wait, it.jobTitle, it.location, it.radius)
-                jobSelect(driver, wait, it.jobTitle)
-            }
+            jobsFind(driver, wait, params.jobTitle, params.location, params.radius)
+            jobSelect(driver, wait, params.jobTitle)
         }
     }
+
+    @Test
+    fun jobsFind2() {
+        pagesByDriver.forEach { (driver, pages) ->
+            val wait = waits[driver]
+            pages.loginPage.login(email, password)
+            wait?.until(ExpectedConditions.urlContains(jobsFindUrl))
+
+            val params = Params("Manager", "St Petersburg", Radius.KM_50)
+
+            jobsFind(driver, wait, params.jobTitle, params.location, params.radius)
+            jobSelect(driver, wait, params.jobTitle)
+        }
+    }
+
+    // @Test
+    // fun jobsFind() {
+    //     pagesByDriver.forEach { (driver, pages) ->
+    //         val wait = waits[driver]
+    //         pages.loginPage.login(email, password)
+    //         wait?.until(ExpectedConditions.urlContains(jobsFindUrl))
+    //
+    //         val paramsList = listOf(
+    //             Params("Software Developer", null, Radius.NO_RADIUS),
+    //             Params("Manager", "St Petersburg", Radius.KM_50)
+    //         )
+    //
+    //         paramsList.forEach {
+    //             driver.get(jobsFindUrl)
+    //             jobsFind(driver, wait, it.jobTitle, it.location, it.radius)
+    //             jobSelect(driver, wait, it.jobTitle)
+    //         }
+    //     }
+    // }
 
     private fun jobsFind(
         driver: WebDriver,
