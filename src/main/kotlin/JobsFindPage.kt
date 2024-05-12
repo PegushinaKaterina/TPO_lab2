@@ -4,9 +4,9 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import java.time.Duration
 
-class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriver, WebDriverWait>) : Page(driver, waits) {
+class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriver, WebDriverWait>) :
+    Page(driver, waits) {
 
     @FindBy(xpath = "//*[@id=\"keywords-input\"]")
     lateinit var jobTitleInput: WebElement
@@ -49,7 +49,7 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
     fun selectRadius(radius: Radius?) {
         radius?.let {
             if (radiusSelections.isEnabled && radiusSelections.isDisplayed) {
-                val wait = WebDriverWait(driver, Duration.ofSeconds(10))
+                val wait = waits[driver]!!
                 radiusSelections.click()
 
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(radius.radiusOptionButtonXPath)))
@@ -61,7 +61,6 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
                 wait.until(ExpectedConditions.textToBePresentInElement(radiusSelectionsText, radius.text))
             }
         }
-
     }
 
     fun clickFindJobButton() {
@@ -76,22 +75,26 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
         visitButton.click()
     }
 
-    fun jobsFind(jobTitle: String, location: String?, radius: Radius?, jobsSearchUrl: String) {
-        val wait = WebDriverWait(driver, Duration.ofSeconds(10))
-        inputJobTitle(jobTitle)
-        selectRadius(radius)
-        inputLocation(location)
-
-        clickFindJobButton()
-        wait.until(ExpectedConditions.urlContains(jobsSearchUrl))
+    fun jobSelect(): Boolean {
+        val wait = waits[driver]!!
         val resultList = driver.findElements(By.xpath("//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/main/ul"))
 
-        if(resultList.isNotEmpty()) {
-            wait.until(ExpectedConditions.elementToBeClickable(firstJob))
+        return if (resultList.isNotEmpty()) {
+            waits[driver]!!.until(ExpectedConditions.elementToBeClickable(firstJob))
             clickFirstJobButton()
 
             wait.until(ExpectedConditions.elementToBeClickable(visitButton))
             clickVisitButton()
+            true
+        } else {
+            false
         }
+    }
+
+    fun jobsFind(jobTitle: String, location: String?, radius: Radius?) {
+        inputJobTitle(jobTitle)
+        selectRadius(radius)
+        inputLocation(location)
+        clickFindJobButton()
     }
 }
