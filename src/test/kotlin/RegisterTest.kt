@@ -31,7 +31,7 @@ class RegisterTest : BaseTest() {
     }
 
     @Test
-    fun register() {
+    fun testRegister() {
         registerPageByDriver.forEach { (driver, registerPage) ->
             registerPage.register(firstName, lastName, email, password)
 

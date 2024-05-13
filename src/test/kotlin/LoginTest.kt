@@ -37,7 +37,7 @@ class LoginTest : BaseTest() {
     }
 
     @Test
-    fun login() {
+    fun testLogin() {
         loginPageByDriver.forEach { (driver, loginPage) ->
             loginPage.login(email, password)
 
@@ -50,7 +50,7 @@ class LoginTest : BaseTest() {
     }
 
     @Test
-    fun loginWithInvalidEmail() {
+    fun testLoginWithInvalidEmail() {
         loginPageByDriver.forEach { (_, loginPage) ->
             assertThrows<InvalidLoginOrPasswordException> { loginPage.login(invalidEmail, password) }
         }

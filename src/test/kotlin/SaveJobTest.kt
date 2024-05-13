@@ -3,38 +3,47 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import kotlin.test.assertTrue
+import kotlin.test.assertEquals
 
-class JobsFindTest : BaseTest() {
+class SaveJobTest : BaseTest() {
 
     private lateinit var pagesByDriver: Map<WebDriver, Pages>
 
     private lateinit var jobsFindUrl: String
+    private lateinit var jobsSearchUrl: String
+    private lateinit var myJobsUrl: String
     private lateinit var firstName: String
     private lateinit var lastName: String
     private lateinit var email: String
     private lateinit var password: String
-    private lateinit var jobsSearchUrl: String
 
     override fun getUrl(): String {
         return jobsFindUrl
     }
 
     override fun initializePages() {
-        pagesByDriver = drivers.associateWith { Pages(LoginPage(it, waits), JobsFindPage(it, waits)) }
+        pagesByDriver =
+            drivers.associateWith {
+                Pages(
+                    LoginPage(it, waits),
+                    JobsFindPage(it, waits),
+                    MyJobsPage(it, waits),
+                )
+            }
     }
 
     override fun initializeData() {
         jobsFindUrl = dataProps.getProperty("jobs.find.url")
+        jobsSearchUrl = dataProps.getProperty("jobs.search.url")
+        myJobsUrl = dataProps.getProperty("my.jobs.url")
         firstName = dataProps.getProperty("first.name")
         lastName = dataProps.getProperty("last.name")
         email = dataProps.getProperty("email")
         password = dataProps.getProperty("password")
-        jobsSearchUrl = dataProps.getProperty("jobs.search.url")
     }
 
     @Test
-    fun testFindExistingJob() {
+    fun testSaveJob() {
         pagesByDriver.forEach { (driver, pages) ->
             val wait = waits[driver]
             pages.loginPage.login(email, password)
@@ -44,28 +53,21 @@ class JobsFindTest : BaseTest() {
 
             val params = Params("Software Developer", null, Radius.NO_RADIUS)
 
-            jobsFind(driver, wait, params.jobTitle, params.location, params.radius)
-            jobSelect(driver, wait, params.jobTitle)
+            findJobs(driver, wait, params.jobTitle, params.location, params.radius)
+
+            val jobName = pages.jobsFindPage.saveFirstJob()
+
+            driver.get(myJobsUrl)
+            wait?.until(ExpectedConditions.visibilityOf(pages.myJobsPage.firstJobName))
+
+            val addedJobName = pages.myJobsPage.firstJobName.text
+            assertEquals(jobName, addedJobName)
+
+            pages.myJobsPage.removeSavedJob()
         }
     }
 
-    @Test
-    fun testFindUnexistingJob() {
-        pagesByDriver.forEach { (driver, pages) ->
-            val wait = waits[driver]
-            pages.loginPage.login(email, password)
-            wait?.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//button[@data-qa=\"search-radius-dropdown\"]")
-            ))
-
-            val params = Params("Manager", "St Petersburg", Radius.KM_50)
-
-            jobsFind(driver, wait, params.jobTitle, params.location, params.radius)
-            jobSelect(driver, wait, params.jobTitle)
-        }
-    }
-
-    private fun jobsFind(
+    private fun findJobs(
         driver: WebDriver,
         wait: WebDriverWait?,
         jobTitle: String,
@@ -76,19 +78,8 @@ class JobsFindTest : BaseTest() {
         pages.jobsFindPage.jobsFind(jobTitle, location, radius)
 
         wait?.until(ExpectedConditions.urlContains(jobsSearchUrl))
-        val currentUrl = driver.currentUrl
-        assertTrue(currentUrl.contains(jobsSearchUrl))
     }
 
-    private fun jobSelect(driver: WebDriver, wait: WebDriverWait?, jobTitle: String) {
-        val pages = pagesByDriver[driver]!!
-        if (pages.jobsFindPage.jobSelect()) {
-            wait?.until(ExpectedConditions.titleContains(jobTitle))
-            val currentTitle = driver.title
-            assertTrue(currentTitle.contains(jobTitle))
-        }
-    }
-
-    class Pages(val loginPage: LoginPage, val jobsFindPage: JobsFindPage)
+    class Pages(val loginPage: LoginPage, val jobsFindPage: JobsFindPage, val myJobsPage: MyJobsPage)
     class Params(val jobTitle: String, val location: String?, val radius: Radius?)
 }

@@ -39,7 +39,7 @@ class SendContactRequestTest : BaseTest() {
     }
 
     @Test
-    fun jobsFind() {
+    fun testSendContactRequest() {
         pagesByDriver.forEach { (driver, pages) ->
             val wait = waits[driver]
             pages.loginPage.login(email, password)

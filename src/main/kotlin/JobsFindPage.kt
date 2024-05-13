@@ -32,6 +32,12 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
     @FindBy(xpath = "//*[text()=\"Visit employer website\"]/ancestor::a")
     lateinit var visitButton: WebElement
 
+    @FindBy(xpath = "//*[text()=\"Save job\"][1]/ancestor::button[@data-cy=\"bookmark-action-button\"]")
+    lateinit var firstSaveButton: WebElement
+
+    @FindBy(xpath = "//h3[@data-cy=\"job-teaser-list-title\"][1]")
+    lateinit var firstJobName: WebElement
+
     fun jobSelect(): Boolean {
         val wait = waits[driver]
         val resultList = driver.findElements(By.xpath("//*[@id=\"app\"]/div/div[2]/div/div/div[1]/div/main/ul"))
@@ -53,6 +59,11 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
         inputLocation(location)
         inputJobTitle(jobTitle)
         clickFindJobButton()
+    }
+
+    fun saveFirstJob(): String {
+        firstSaveButton.click()
+        return firstJobName.text
     }
 
     private fun inputJobTitle(jobTitle: String) {
@@ -77,9 +88,8 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
         radius?.let {
             if (radiusSelections.isEnabled && radiusSelections.isDisplayed) {
                 val wait = waits[driver]
-                radiusSelections.click()
 
-                wait?.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(radius.buttonXPath)))
+                clickRadiusMenu(wait, radius)
 
                 val radiusButton =
                     driver.findElement(By.xpath(radius.buttonXPath))
@@ -100,5 +110,15 @@ class JobsFindPage(private val driver: WebDriver, private val waits: Map<WebDriv
 
     private fun clickVisitButton() {
         visitButton.click()
+    }
+
+    private fun clickRadiusMenu(wait: WebDriverWait?, radius: Radius) {
+        try {
+            radiusSelections.click()
+            wait?.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(radius.buttonXPath)))
+        } catch (e: Exception) {
+            radiusSelections.click()
+            wait?.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(radius.buttonXPath)))
+        }
     }
 }
